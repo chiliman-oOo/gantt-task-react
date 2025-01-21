@@ -40,6 +40,7 @@
   "scripts": {
     "storybook": "storybook dev",
     "build": "vite build && tsc",
+    "dev": "vite build --watch --emptyOutDir false & tsc --watch",
     "start": "vite --host",
     "prepare": "run-s build",
     "test": "run-s test:unit test:lint test:build",

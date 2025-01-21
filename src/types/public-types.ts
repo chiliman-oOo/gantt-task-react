@@ -289,60 +289,60 @@ export type FixPosition = (
 
 export type OnChangeTasksAction =
   | {
-  type: "add_tasks";
-}
+      type: "add_tasks";
+    }
   | {
-  type: "date_change";
-}
+      type: "date_change";
+    }
   | {
-  type: "delete_relation";
-  payload: {
-    taskFrom: Task;
-    taskFromIndex: number;
-    taskTo: Task;
-    taskToIndex: number;
-  };
-}
+      type: "delete_relation";
+      payload: {
+        taskFrom: Task;
+        taskFromIndex: number;
+        taskTo: Task;
+        taskToIndex: number;
+      };
+    }
   | {
-  type: "delete_task";
-  payload: {
-    tasks: readonly TaskOrEmpty[];
-    taskIndexes: readonly number[];
-  };
-}
+      type: "delete_task";
+      payload: {
+        tasks: readonly TaskOrEmpty[];
+        taskIndexes: readonly number[];
+      };
+    }
   | {
-  type: "edit_task";
-}
+      type: "edit_task";
+    }
   | {
-  type: "fix_dependency_position";
-}
+      type: "fix_dependency_position";
+    }
   | {
-  type: "fix_end_position";
-}
+      type: "fix_end_position";
+    }
   | {
-  type: "fix_start_position";
-}
+      type: "fix_start_position";
+    }
   | {
-  type: "move_task_before";
-}
+      type: "move_task_before";
+    }
   | {
-  type: "move_task_after";
-}
+      type: "move_task_after";
+    }
   | {
-  type: "move_task_inside";
-}
+      type: "move_task_inside";
+    }
   | {
-  type: "progress_change";
-}
+      type: "progress_change";
+    }
   | {
-  type: "relation_change";
-}
+      type: "relation_change";
+    }
   | {
-  type: "expandState_change";
-  payload: {
-    changedTask: Task;
-  };
-};
+      type: "expandState_change";
+      payload: {
+        changedTask: Task;
+      };
+    };
 
 export type RelationKind =
   | "startToStart"
@@ -465,10 +465,6 @@ export interface DisplayOption {
    * Display offsets from start on timeline instead of dates
    */
   isUnknownDates?: boolean;
-  /**
-   * Locale of date-fns
-   */
-  dateLocale?: DateLocale;
   viewDate?: Date;
   preStepsCount?: number;
   rtl?: boolean;
@@ -595,6 +591,7 @@ export interface TaskDependencyContextualPaletteProps {
 export type DateExtremity = "startOfTask" | "endOfTask";
 
 export interface GanttProps extends EventOption, DisplayOption, StylingOption {
+  locale?: "en" | "ru";
   /**
    * Can be used to compare multiple graphs. This prop is the number of graps being compared
    */
@@ -707,8 +704,10 @@ export interface TaskOutOfParentWarnings {
  *   },
  * }
  */
-export type ChildOutOfParentWarnings = Map<number,
-  Map<string, TaskOutOfParentWarnings>>;
+export type ChildOutOfParentWarnings = Map<
+  number,
+  Map<string, TaskOutOfParentWarnings>
+>;
 
 // comparison level -> task id -> expanded dependencies
 export type DependencyMap = Map<number, Map<string, ExpandedDependency[]>>;
@@ -841,47 +840,47 @@ export type OnResizeColumn = (
 ) => void;
 export type ChangeAction =
   | {
-  type: "add-childs";
-  parent: Task;
-  // comparison level -> task id
-  addedIdsMap: Map<number, Set<string>>;
-  addedChildsByLevelMap: ChildByLevelMap;
-  addedRootsByLevelMap: RootMapByLevel;
-  descendants: readonly TaskOrEmpty[];
-}
+      type: "add-childs";
+      parent: Task;
+      // comparison level -> task id
+      addedIdsMap: Map<number, Set<string>>;
+      addedChildsByLevelMap: ChildByLevelMap;
+      addedRootsByLevelMap: RootMapByLevel;
+      descendants: readonly TaskOrEmpty[];
+    }
   | {
-  type: "change";
-  task: TaskOrEmpty;
-}
+      type: "change";
+      task: TaskOrEmpty;
+    }
   | {
-  type: "change_start_and_end";
-  task: Task;
-  changedTask: Task;
-  originalTask: Task;
-}
+      type: "change_start_and_end";
+      task: Task;
+      changedTask: Task;
+      originalTask: Task;
+    }
   | {
-  type: "delete";
-  tasks: readonly TaskOrEmpty[];
-  // comparison level -> task id
-  deletedIdsMap: Map<number, Set<string>>;
-}
+      type: "delete";
+      tasks: readonly TaskOrEmpty[];
+      // comparison level -> task id
+      deletedIdsMap: Map<number, Set<string>>;
+    }
   | {
-  type: "move-before";
-  target: TaskOrEmpty;
-  taskForMove: TaskOrEmpty;
-}
+      type: "move-before";
+      target: TaskOrEmpty;
+      taskForMove: TaskOrEmpty;
+    }
   | {
-  type: "move-after";
-  target: TaskOrEmpty;
-  taskForMove: TaskOrEmpty;
-}
+      type: "move-after";
+      target: TaskOrEmpty;
+      taskForMove: TaskOrEmpty;
+    }
   | {
-  type: "move-inside";
-  parent: Task;
-  childs: readonly TaskOrEmpty[];
-  // comparison level -> task id
-  movedIdsMap: Map<number, Set<string>>;
-};
+      type: "move-inside";
+      parent: Task;
+      childs: readonly TaskOrEmpty[];
+      // comparison level -> task id
+      movedIdsMap: Map<number, Set<string>>;
+    };
 
 export type ChangeMetadata = [
   /**

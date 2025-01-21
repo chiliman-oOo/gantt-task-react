@@ -2,7 +2,10 @@
   position: relative;
   display: table-row;
   text-overflow: ellipsis;
+}
+.draggable {
   cursor:grab
+
 }
 .taskListTableRowGrabbing {
   cursor:grabbing

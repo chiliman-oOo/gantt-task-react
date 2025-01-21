@@ -300,7 +300,7 @@ const TaskListTableRowInner: React.FC<TaskListTableRowProps> =
 
   return (
     <div
-      className={`${styles.taskListTableRow} ${isCut ? styles.cut : ""}`}
+      className={`${styles.taskListTableRow} ${isCut ? styles.cut : ""} ${canMoveTasks ? styles.draggable : ""}`}
       onMouseDown={onRootMouseDown}
       style={{
         height: fullRowHeight,
@@ -308,7 +308,7 @@ const TaskListTableRowInner: React.FC<TaskListTableRowProps> =
         ...style
       }}
       onContextMenu={onContextMenu}
-      draggable
+      draggable={canMoveTasks}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}

@@ -11,7 +11,7 @@ import {
 
 import type { ChangeInProgress, Task } from "../types/public-types";
 
-export const useTaskTooltip = (changeInProgress: ChangeInProgress | null) => {
+export const useTaskTooltip: any = (changeInProgress: ChangeInProgress | null) => {
   const [hoverTooltipTask, setHoverTooltipTask] = useState<Task | null>(null);
   const [hoverTooltipEl, setHoverTooltipEl] = useState<Element | null>(null);
 
