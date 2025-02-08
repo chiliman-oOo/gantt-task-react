@@ -17,8 +17,7 @@ export const Bar: React.FC<
   }
 > = ({
   children: relationhandles,
-  colorStyles,
-
+  colorStyles, ref,
   distances: { barCornerRadius, handleWidth },
   hasChildren,
   isCritical,
@@ -115,6 +114,7 @@ export const Bar: React.FC<
 
   return (
     <g
+      ref={ref}
       className={`${styles.barWrapper} ${stylesRelationHandle.barRelationHandleWrapper}`}
       tabIndex={0}
     >

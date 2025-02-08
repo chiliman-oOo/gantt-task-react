@@ -43,9 +43,9 @@ const GridBodyInner: React.FC<GridBodyProps> = ({
 
     return (
       <rect
-        x={additionalLeftSpace + x}
+        x={additionalLeftSpace + x + Math.round(columnWidth/2)}
         y={0}
-        width={columnWidth}
+        width={1}
         height={ganttFullHeight}
         fill={todayColor}
       />

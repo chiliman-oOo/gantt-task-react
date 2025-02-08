@@ -16,7 +16,6 @@ import type {
   Task,
   TaskMapByLevel,
 } from "../../types/public-types";
-import { roundTaskDates } from "../../helpers/round-task-dates";
 
 type UseGetTaskCurrentStateParams = {
   adjustTaskToWorkingDates: (params: AdjustTaskToWorkingDatesParams) => Task;
@@ -42,8 +41,7 @@ export const useGetTaskCurrentState = ({
   isUpdateDisabledParentsOnChange,
   mapTaskToCoordinates,
   roundDate,
-  tasksMap,
-  dateMoveStep,
+  tasksMap
 }: UseGetTaskCurrentStateParams) => {
   const getTaskCurrentState = useCallback(
     (currentOriginalTask: Task): Task => {
@@ -53,7 +51,6 @@ export const useGetTaskCurrentState = ({
       //  + changeInProgress.changedTask is the task that corresponds to the exact move on the full task or the start/end date handlers
       //  + the task is then rounded
       //  + and then ajusted to working days if required
-
       const taskIsChanged =
         changeInProgress &&
         (changeInProgress.changedTask.start != currentOriginalTask.start ||
@@ -65,12 +62,8 @@ export const useGetTaskCurrentState = ({
         // It rounds the date and then adjusts it to working dates
 
         if (changeInProgress.originalTask === currentOriginalTask) {
-          const roundedTask = roundTaskDates(
-            changeInProgress.changedTask,
-            roundDate,
-            changeInProgress.action,
-            dateMoveStep
-          );
+          const roundedTask = changeInProgress.changedTask
+
           const roundTaskIsDifferentFromOriginal =
             roundedTask.start != currentOriginalTask.start ||
             roundedTask.end != currentOriginalTask.end;
@@ -105,12 +98,8 @@ export const useGetTaskCurrentState = ({
             start: addMilliseconds(currentOriginalTask.start, tsDiff),
           };
 
-          const roundedTask = roundTaskDates(
-            movedTask,
-            roundDate,
-            changeInProgress.action,
-            dateMoveStep
-          );
+          const roundedTask = movedTask
+
           const roundTaskIsDifferentFromOriginal =
             roundedTask.start != currentOriginalTask.start ||
             roundedTask.end != currentOriginalTask.end;

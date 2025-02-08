@@ -12,6 +12,7 @@ export const Milestone: React.FC<
     onTaskEventStart: (action: BarMoveAction, clientX: number) => void;
   }
 > = ({
+                               ref,
   children: relationhandles,
   task,
   taskYOffset,
@@ -25,7 +26,7 @@ export const Milestone: React.FC<
 }) => {
   const rotatedHeight = taskHeight / 1.414;
 
-  const transform = `rotate(45 ${x1 + rotatedHeight * 0.356} 
+  const transform = `rotate(45 ${x1 + rotatedHeight * 0.356}
     ${taskYOffset + rotatedHeight * 0.85})`;
 
   const barColor = useMemo(() => {
@@ -46,6 +47,7 @@ export const Milestone: React.FC<
 
   return (
     <g
+      ref={ref}
       tabIndex={0}
       className={`${styles.milestoneWrapper} ${stylesRelationHandle.barRelationHandleWrapper}`}
     >

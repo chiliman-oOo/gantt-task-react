@@ -3,7 +3,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from "react";
 
 import enDateLocale from "date-fns/locale/en-US";
@@ -78,10 +78,12 @@ import { useHandleAction } from "./use-handle-action";
 import { defaultGetCopiedTaskId } from "./default-get-copied-task-id";
 
 import { copyTasks } from "../../helpers/copy-tasks";
-import { copyOption } from "../../context-menu-options";
-import { cutOption } from "../../context-menu-options";
-import { pasteOption } from "../../context-menu-options";
-import { deleteOption } from "../../context-menu-options";
+import {
+  copyOption,
+  cutOption,
+  deleteOption,
+  pasteOption,
+} from "../../context-menu-options";
 
 import { useHolidays } from "./use-holidays";
 
@@ -126,7 +128,7 @@ const defaultColors: ColorStyles = {
   holidayBackgroundColor: "rgba(233, 233, 233, 0.3)",
   selectedTaskBackgroundColor: "rgba(252, 248, 227, 0.5)",
   taskDragColor: "#7474ff",
-  todayColor: "rgba(252, 248, 227, 0.5)",
+  todayColor: "rgb(24,113,14)",
   contextMenuBoxShadow: "rgb(0 0 0 / 25%) 1px 1px 5px 1px",
   contextMenuBgColor: "#fff",
   contextMenuTextColor: "inherit",
@@ -162,7 +164,7 @@ const defaultDistances: Distances = {
   nestedTaskNameOffset: 20,
   relationCircleOffset: 10,
   relationCircleRadius: 5,
-  rowHeight: 50,
+  rowHeight: 35,
   taskWarningOffset: 35,
   titleCellWidth: 220,
 };
@@ -189,7 +191,7 @@ export const Gantt = ({
   comparisonLevels = 1,
   contextMenuOptions: contextMenuOptionsProp = undefined,
   dateFormats: dateFormatsProp = undefined,
-  locale = 'en',
+  locale = "en",
   distances: distancesProp = undefined,
   enableTableListContextMenu = 0,
   fixEndPosition: fixEndPositionProp = undefined,
@@ -236,6 +238,7 @@ export const Gantt = ({
   timeStep = 300000,
   viewDate,
   viewMode = ViewMode.Day,
+  ganttHeight,
 }: GanttProps) => {
   const ganttSVGRef = useRef<SVGSVGElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -458,7 +461,7 @@ export const Gantt = ({
   const dateSetup = useMemo<DateSetup>(
     () => ({
       dateFormats,
-      dateLocale: locale == 'ru' ? ruDateLocale : enDateLocale,
+      dateLocale: locale == "ru" ? ruDateLocale : enDateLocale,
       isUnknownDates,
       preStepsCount,
       viewMode,
@@ -1939,6 +1942,7 @@ export const Gantt = ({
         gridTemplateColumns: `${displayTable ? "max-content" : ""} auto`,
         background: colors.evenTaskBackgroundColor,
         color: colors.barLabelColor,
+        height: ganttHeight,
       }}
     >
       {/* {columns.length > 0 && <TaskList {...tableProps} />} */}
@@ -1960,7 +1964,7 @@ export const Gantt = ({
         colors={colors}
       />
 
-      {tooltipTaskFromMap && (
+      {!!tooltipTaskFromMap && (
         <Tooltip
           tooltipX={tooltipX}
           tooltipY={tooltipY}
@@ -1969,12 +1973,12 @@ export const Gantt = ({
           getFloatingProps={getFloatingProps}
           fontFamily={fontFamily}
           fontSize={fontSize}
-          task={tooltipTaskFromMap}
+          task={getTaskCurrentState(tooltipTaskFromMap)}
           TooltipContent={TooltipContent}
         />
       )}
 
-      {enableTableListContextMenu && (
+      {!!enableTableListContextMenu && (
         <ContextMenu
           checkHasCopyTasks={checkHasCopyTasks}
           checkHasCutTasks={checkHasCutTasks}

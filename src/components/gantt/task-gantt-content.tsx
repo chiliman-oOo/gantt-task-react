@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
 import type { MouseEvent, ReactNode } from "react";
+import React, { useMemo } from "react";
 
 import {
   BarMoveAction,
@@ -7,19 +7,19 @@ import {
   ChildOutOfParentWarnings,
   ColorStyles,
   CriticalPaths,
+  DateExtremity,
   DependencyMap,
   DependentMap,
   Distances,
   FixPosition,
   GlobalRowIndexToTaskMap,
   RelationKind,
-  DateExtremity,
   Task,
   TaskContextualPaletteProps,
   TaskCoordinates,
+  TaskDependencyContextualPaletteProps,
   TaskOrEmpty,
   TaskToHasDependencyWarningMap,
-  TaskDependencyContextualPaletteProps,
 } from "../../types/public-types";
 import { Arrow } from "../other/arrow";
 import { RelationLine } from "../other/relation-line";
@@ -190,7 +190,6 @@ export const TaskGanttContent: React.FC<TaskGanttContentProps> = ({
 
       const {
         containerX,
-        containerWidth,
         innerX1,
         innerX2,
         width,
@@ -206,7 +205,6 @@ export const TaskGanttContent: React.FC<TaskGanttContentProps> = ({
           className="TaskItemClassName"
           x={containerX + (additionalLeftSpace || 0)}
           y={levelY}
-          width={containerWidth}
           height={fullRowHeight}
           key={key}
         >

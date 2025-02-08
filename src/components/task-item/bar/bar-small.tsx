@@ -12,6 +12,7 @@ export const BarSmall: React.FC<
     onTaskEventStart: (action: BarMoveAction, clientX: number) => void;
   }
 > = ({
+                              ref,
   children: relationhandles,
   colorStyles,
   distances: { barCornerRadius, handleWidth },
@@ -43,6 +44,7 @@ export const BarSmall: React.FC<
 
   return (
     <g
+      ref={ref}
       className={`${styles.barWrapper} ${stylesRelationHandle.barRelationHandleWrapper}`}
       tabIndex={0}
     >

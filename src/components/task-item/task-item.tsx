@@ -29,6 +29,7 @@ import { BarFixWidth, fixWidthContainerClass } from "../other/bar-fix-width";
 import { BarRelationHandle } from "./bar/bar-relation-handle";
 
 export type TaskItemProps = {
+  ref?: React.RefObject<any>
   children?: React.ReactNode
   getTaskGlobalIndexByRef: (task: Task) => number;
   hasChildren: boolean;
@@ -112,7 +113,7 @@ const TaskItemInner: React.FC<TaskItemProps> = props => {
     x2,
   } = props;
 
-  const taskRootRef = useRef<SVGGElement>(null);
+  const barNodeRef = useRef<SVGGElement>(null);
 
   const styles = useMemo(() => {
     if (taskStyles) {
@@ -194,10 +195,10 @@ const TaskItemInner: React.FC<TaskItemProps> = props => {
         return;
       }
 
-      const taskRootNode = taskRootRef.current;
+      const barNode = barNodeRef.current;
 
-      if (taskRootNode) {
-        onEventStart(action, task, clientX, taskRootNode);
+      if (barNode) {
+        onEventStart(action, task, clientX, barNode);
       }
     },
     [isDateChangeable, onEventStart, task]
@@ -288,6 +289,7 @@ const TaskItemInner: React.FC<TaskItemProps> = props => {
       return (
         <Milestone
           {...props}
+          ref={barNodeRef}
           colorStyles={styles}
           onTaskEventStart={onTaskEventStart}
         >
@@ -298,6 +300,7 @@ const TaskItemInner: React.FC<TaskItemProps> = props => {
       return (
         <BarSmall
           {...props}
+          ref={barNodeRef}
           colorStyles={styles}
           onTaskEventStart={onTaskEventStart}
         >
@@ -308,6 +311,7 @@ const TaskItemInner: React.FC<TaskItemProps> = props => {
       return (
         <Bar
           {...props}
+          ref={barNodeRef}
           onTaskEventStart={onTaskEventStart}
           colorStyles={styles}
         >
@@ -350,8 +354,8 @@ const TaskItemInner: React.FC<TaskItemProps> = props => {
   );
 
   const onMouseEnter = useCallback<MouseEventHandler<SVGGElement>>(
-    event => {
-      setTooltipTask(task, event.currentTarget);
+    () => {
+      setTooltipTask(task, barNodeRef.current);
     },
     [setTooltipTask, task]
   );
@@ -380,7 +384,6 @@ const TaskItemInner: React.FC<TaskItemProps> = props => {
       onMouseLeave={onMouseLeave}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
-      ref={taskRootRef}
     >
       {taskItem}
       <text

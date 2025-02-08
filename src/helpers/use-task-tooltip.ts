@@ -25,7 +25,7 @@ export const useTaskTooltip: any = (changeInProgress: ChangeInProgress | null) =
 
   const tooltipEl = useMemo(() => {
     if (changeInProgress) {
-      return changeInProgress.taskRootNode;
+      return changeInProgress.taskBarNode;
     }
 
     return hoverTooltipEl;

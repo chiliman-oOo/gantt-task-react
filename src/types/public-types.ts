@@ -562,6 +562,7 @@ export interface StylingOption {
   dateMoveStep?: GanttDateRounding;
   ContextualPalette?: React.FC<TaskContextualPaletteProps>;
   TaskDependencyContextualPalette?: React.FC<TaskDependencyContextualPaletteProps>;
+  ganttHeight?: string | number;
 }
 
 export interface GanttDateRounding {
@@ -796,7 +797,7 @@ export type ChangeInProgress = {
   lastClientX: number;
   startX: number;
   originalTask: Task;
-  taskRootNode: Element;
+  taskBarNode: Element;
   tsDiff: number;
 };
 

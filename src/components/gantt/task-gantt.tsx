@@ -68,8 +68,8 @@ const TaskGanttInner: React.FC<TaskGanttProps> = (props) => {
       backgroundSize: `${columnWidth}px ${fullRowHeight * 2}px`,
       backgroundPositionX: additionalLeftSpace || undefined,
       backgroundImage: [
-        `linear-gradient(to right, #ebeff2 1px, transparent 2px)`,
-        `linear-gradient(to bottom, transparent ${fullRowHeight}px, #f5f5f5 ${fullRowHeight}px)`,
+        `linear-gradient(to right, #ebefff 1px, transparent 2px)`,
+        `linear-gradient(to bottom, ${colors.oddTaskBackgroundColor} ${fullRowHeight}px, #f5f5f5 ${fullRowHeight}px)`,
       ].join(", "),
     }),
     [
@@ -203,7 +203,7 @@ const TaskGanttInner: React.FC<TaskGanttProps> = (props) => {
             fontFamily={barProps.fontFamily}
             ref={ganttSVGRef}
             style={{
-              background: colors.oddTaskBackgroundColor
+              //background: colors.oddTaskBackgroundColor
             }}
           >
             <Grid {...gridProps} />

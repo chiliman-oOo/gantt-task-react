@@ -294,7 +294,7 @@ export const useTaskDrag = ({
         lastClientX: cursor.x,
         startX: cursor.x,
         originalTask: task,
-        taskRootNode,
+        taskBarNode: taskRootNode,
         tsDiff: 0,
       });
     },
