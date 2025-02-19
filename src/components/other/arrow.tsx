@@ -95,7 +95,7 @@ const ArrowInner: React.FC<ArrowProps> = ({
         onArrowClick(taskFrom, extremityFrom, taskTo, extremityTo, event);
       }
     },
-    [taskFrom, taskTo, onArrowDoubleClick]
+    [taskFrom, taskTo, onArrowClick]
   );
 
   const [path, trianglePoints] = useMemo(
