@@ -27,7 +27,7 @@ const TaskListHeaderDefaultInner: React.FC<TaskListHeaderProps & TaskListHeaderA
         fontSize: fontSize,
       }}
     >
-      {columns.map(({ title, width, canResize }, index) => {
+      {columns.map(({ title, width, canResize, id }, index) => {
         return (
           <Fragment key={index}>
             {index > 0 && (
@@ -53,7 +53,7 @@ const TaskListHeaderDefaultInner: React.FC<TaskListHeaderProps & TaskListHeaderA
                   {title}
                 </div>
 
-                {title === "Name" && <TaskListHeaderActions
+                {id === "Name" && <TaskListHeaderActions
                   onCollapseAll={onCollapseAll}
                   onExpandFirstLevel={onExpandFirstLevel}
                   onExpandAll={onExpandAll}

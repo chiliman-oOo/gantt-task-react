@@ -42,7 +42,6 @@ export const useHorizontalScrollbars = (): [
       if (isLockedRef.current) {
         return;
       }
-
       const nextScrollX = event.currentTarget.scrollLeft;
 
       if (ganttTaskRootRef.current) {

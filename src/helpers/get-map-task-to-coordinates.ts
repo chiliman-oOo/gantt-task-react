@@ -101,7 +101,7 @@ export const getMapTaskToCoordinates = (
   const res = new Map<number, Map<string, TaskCoordinates>>();
 
   tasks.forEach(task => {
-    if (task.type === "empty") {
+    if (task.type === "empty" || !task.start || !task.end) {
       return;
     }
 

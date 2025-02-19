@@ -32,7 +32,7 @@ const collectSuggestedParents = (
       return collectParents(changeAction.task, tasksMap);
 
     case "delete": {
-      const resSet = new Set<Task>();
+      const resSet = new Set<TaskOrEmpty>();
 
       changeAction.tasks.forEach(task => {
         const parents = collectParents(task, tasksMap);
@@ -58,7 +58,7 @@ const collectSuggestedParents = (
       ];
 
     case "move-inside": {
-      const resSet = new Set<Task>([changeAction.parent]);
+      const resSet = new Set<TaskOrEmpty>([changeAction.parent]);
 
       collectParents(changeAction.parent, tasksMap).forEach(parentTask => {
         resSet.add(parentTask);
@@ -89,6 +89,8 @@ type GetChangeTaskMetadataParams = {
   isUpdateDisabledParentsOnChange: boolean;
   mapTaskToGlobalIndex: TaskToGlobalIndexMap;
   tasksMap: TaskMapByLevel;
+  getTaskCurrentState?: (task: Task) => Task;
+  sortedTasks: TaskOrEmpty[];
 };
 
 export const getChangeTaskMetadata = ({
@@ -100,6 +102,8 @@ export const getChangeTaskMetadata = ({
   isUpdateDisabledParentsOnChange,
   mapTaskToGlobalIndex,
   tasksMap,
+  getTaskCurrentState,
+  sortedTasks,
 }: GetChangeTaskMetadataParams): ChangeMetadata => {
   const parentSuggestedTasks = isUpdateDisabledParentsOnChange
     ? collectSuggestedParents(changeAction, tasksMap)
@@ -133,6 +137,44 @@ export const getChangeTaskMetadata = ({
   const suggestedTasks = [...parentSuggestedTasks, ...descendants];
   const suggestions = [...parentSuggestions, ...descendantSuggestions];
 
+  sortedTasks.map(task => {
+    const suggestedTask = getTaskCurrentState(task as Task);
+
+    if (task.start != suggestedTask.start || task.end != suggestedTask.end) {
+      const indexesByLevel = mapTaskToGlobalIndex.get(
+        task.comparisonLevel ? task.comparisonLevel - 1 : 1
+      );
+      const indexInMap = indexesByLevel ? indexesByLevel.get(task.id) : -1;
+      const existsIndex = suggestedTasks.findIndex(
+        sugTask => sugTask.id === task.id
+      );
+      if (existsIndex !== -1) {
+        suggestedTasks[existsIndex] = {
+          ...suggestedTasks[existsIndex],
+          ...suggestedTask,
+        };
+        const foundSuggestionIndex = suggestions.findIndex(
+          sugTask => sugTask[2].id === task.id
+        );
+
+        suggestions[foundSuggestionIndex] = [
+          suggestedTask.start,
+          suggestedTask.end,
+          suggestedTask,
+          indexInMap,
+        ];
+      } else {
+        suggestedTasks.push(suggestedTask);
+        suggestions.push([
+          suggestedTask.start,
+          suggestedTask.end,
+          suggestedTask,
+          indexInMap,
+        ]);
+      }
+    }
+  });
+
   const taskIndexes = getTaskIndexes(changeAction, mapTaskToGlobalIndex);
   const dependentTasks = getDependentTasks(changeAction, dependentMap);
 
@@ -140,7 +182,7 @@ export const getChangeTaskMetadata = ({
 };
 
 const getSuggestedStartEndChangesFromDirectChildren = (
-  parentTask: Task,
+  parentTask: TaskOrEmpty,
   changeAction: ChangeAction,
   tasksMap: TaskMapByLevel,
   mapTaskToGlobalIndex: TaskToGlobalIndexMap
@@ -156,7 +198,7 @@ const getSuggestedStartEndChangesFromDirectChildren = (
 
   const id2Task: Map<string, TaskOrEmpty> = tasksMap.get(comparisonLevel);
   const tasks = Array.from(id2Task.values()).filter(
-    ({ type }) => type !== "empty"
+    ({ type, start, end }) => type !== "empty" && start && end
   ) as Task[];
   const directChildren = tasks
     .filter(task => {

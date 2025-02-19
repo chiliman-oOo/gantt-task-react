@@ -291,7 +291,7 @@ export const Gantt = ({
     [childTasksMap, rootTasksMap]
   );
 
-  const tasksMap = useMemo(() => getTasksMap(tasks), [tasks]);
+  const tasksMap = useMemo(() => getTasksMap(sortedTasks), [sortedTasks]);
 
   const checkTaskIdExists = useCallback<CheckTaskIdExistsAtLevel>(
     (newId, comparisonLevel = 1) => {
@@ -348,8 +348,8 @@ export const Gantt = ({
       return null;
     }
 
-    return getChildOutOfParentWarnings(tasks, childTasksMap);
-  }, [tasks, childTasksMap, isShowChildOutOfParentWarnings]);
+    return getChildOutOfParentWarnings(sortedTasks, childTasksMap);
+  }, [sortedTasks, childTasksMap, isShowChildOutOfParentWarnings]);
 
   const distances = useMemo<Distances>(
     () => ({
@@ -561,7 +561,7 @@ export const Gantt = ({
   const [dependencyMap, dependentMap, dependencyMarginsMap] = useMemo(
     () =>
       getDependencyMapAndWarnings(
-        tasks,
+        sortedTasks,
         visibleTasksMirror,
         tasksMap,
         mapTaskToCoordinates,
@@ -570,7 +570,7 @@ export const Gantt = ({
         isShowCriticalPath
       ),
     [
-      tasks,
+      sortedTasks,
       visibleTasksMirror,
       tasksMap,
       mapTaskToCoordinates,
@@ -762,6 +762,8 @@ export const Gantt = ({
         isUpdateDisabledParentsOnChange,
         isMoveChildsWithParent,
         tasksMap: tasksMap,
+        getTaskCurrentState,
+        sortedTasks
       }),
     [
       adjustTaskToWorkingDates,
@@ -771,6 +773,7 @@ export const Gantt = ({
       isUpdateDisabledParentsOnChange,
       mapTaskToGlobalIndex,
       tasksMap,
+      sortedTasks
     ]
   );
 
@@ -779,10 +782,7 @@ export const Gantt = ({
    */
   const prepareSuggestions = useCallback(
     (suggestions: readonly OnDateChangeSuggestionType[]): TaskOrEmpty[] => {
-      const prevTasks = [...tasks];
-
-      const nextTasks = prevTasks;
-
+      const nextTasks = [...sortedTasks];
       suggestions.forEach(([start, end, task, index]) => {
         nextTasks[index] = {
           ...task,
@@ -793,7 +793,7 @@ export const Gantt = ({
 
       return nextTasks;
     },
-    [tasks]
+    [sortedTasks]
   );
 
   const handleEditTask = useCallback(
@@ -1009,7 +1009,6 @@ export const Gantt = ({
         getMetadata(changeAction);
 
       const taskIndex = taskIndexes[0].index;
-
       if (onDateChangeProp) {
         onDateChangeProp(
           adjustedTask,
@@ -1051,14 +1050,14 @@ export const Gantt = ({
       }
 
       if (onChangeTasks) {
-        const nextTasks = [...tasks];
+        const nextTasks = [...sortedTasks];
         nextTasks[taskIndex] = task;
         onChangeTasks(nextTasks, {
           type: "progress_change",
         });
       }
     },
-    [getMetadata, onChangeTasks, onProgressChangeProp, childTasksMap]
+    [getMetadata, onChangeTasks, onProgressChangeProp, childTasksMap, sortedTasks]
   );
 
   const [changeInProgress, handleTaskDragStart] = useTaskDrag({
@@ -1417,7 +1416,7 @@ export const Gantt = ({
       }
 
       if (onChangeTasks) {
-        const nextTasks = [...tasks];
+        const nextTasks = [...sortedTasks];
         nextTasks[index] = {
           ...task,
           start: date,
@@ -1428,7 +1427,7 @@ export const Gantt = ({
         });
       }
     },
-    [fixStartPositionProp, onChangeTasks, tasks]
+    [fixStartPositionProp, onChangeTasks, sortedTasks]
   );
 
   const fixEndPosition = useCallback<FixPosition>(
@@ -1438,7 +1437,7 @@ export const Gantt = ({
       }
 
       if (onChangeTasks) {
-        const nextTasks = [...tasks];
+        const nextTasks = [...sortedTasks];
         nextTasks[index] = {
           ...task,
           end: date,
@@ -1449,7 +1448,7 @@ export const Gantt = ({
         });
       }
     },
-    [fixEndPositionProp, onChangeTasks, tasks]
+    [fixEndPositionProp, onChangeTasks, sortedTasks]
   );
 
   const onFixDependencyPosition = useCallback<OnDateChange>(
@@ -1465,7 +1464,7 @@ export const Gantt = ({
       }
 
       if (onChangeTasks) {
-        const nextTasks = [...tasks];
+        const nextTasks = [...sortedTasks];
         nextTasks[taskIndex] = task;
 
         onChangeTasks(nextTasks, {
@@ -1473,7 +1472,7 @@ export const Gantt = ({
         });
       }
     },
-    [onFixDependencyPositionProp, onChangeTasks, tasks]
+    [onFixDependencyPositionProp, onChangeTasks, sortedTasks]
   );
 
   const handleFixDependency = useCallback(
@@ -1518,7 +1517,7 @@ export const Gantt = ({
           return;
         }
 
-        const nextTasks = [...tasks];
+        const nextTasks = [...sortedTasks];
 
         const [taskFrom, targetFrom, fromIndex] = from;
         const [taskTo, targetTo, toIndex] = to;
@@ -1555,7 +1554,7 @@ export const Gantt = ({
         });
       }
     },
-    [onRelationChangeProp, onChangeTasks, tasks]
+    [onRelationChangeProp, onChangeTasks, sortedTasks]
   );
 
   const onArrowDoubleClick = useCallback(
@@ -1589,7 +1588,7 @@ export const Gantt = ({
       }
 
       if (onChangeTasks && isDeleteDependencyOnDoubleClick) {
-        const nextTasks = [...tasks];
+        const nextTasks = [...sortedTasks];
         nextTasks[taskToIndex] = {
           ...taskTo,
           dependencies: taskTo.dependencies
@@ -1615,7 +1614,7 @@ export const Gantt = ({
       mapTaskToGlobalIndex,
       onArrowDoubleClickProp,
       onChangeTasks,
-      tasks,
+      sortedTasks,
     ]
   );
 

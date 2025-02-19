@@ -14,9 +14,7 @@ export const checkIsDescendant = (
    */
   const checkedTasks = new Set<string>();
 
-  const {
-    comparisonLevel = 1,
-  } = maybeDescendant;
+  const { comparisonLevel = 1 } = maybeDescendant;
 
   if ((maybeParent.comparisonLevel || 1) !== comparisonLevel) {
     return false;
@@ -52,7 +50,7 @@ export const checkIsDescendant = (
 
     const parentTask = tasksOnLevel.get(parent);
 
-    if (!parentTask || parentTask.type === "empty") {
+    if (!parentTask) {
       return false;
     }
 

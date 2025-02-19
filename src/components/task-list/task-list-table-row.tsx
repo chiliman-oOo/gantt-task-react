@@ -99,7 +99,7 @@ const TaskListTableRowInner: React.FC<TaskListTableRowProps> =
         return;
       }
 
-      if (task.type !== "empty") {
+      if (task.start && task.end && task.type !== "empty") {
         scrollToTask(task);
       }
 
@@ -353,6 +353,8 @@ const TaskListTableRowInner: React.FC<TaskListTableRowProps> =
               <div
                 style={{
                   pointerEvents: hoveringState.hoveringInside ? "none" : "auto",
+                  flexShrink: 0,
+                  flexGrow: 1,
                 }}
               >
                 <Cell data={columnData} />

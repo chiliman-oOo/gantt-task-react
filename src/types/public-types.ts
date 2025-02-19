@@ -158,19 +158,23 @@ export interface Distances {
 
 export type TaskType = "task" | "milestone" | "project";
 
-export interface Task {
+export interface Task<T = any> {
   id: string;
   type: TaskType;
   name: string;
-  start: Date;
-  end: Date;
+  start?: Date;
+  end?: Date;
+  originalModel?: T
+
   /**
    * From 0 to 100
    */
   progress: number;
+  disableProgressChange?: boolean;
   assignees?: string[];
   styles?: Partial<ColorStyles>;
   isDisabled?: boolean;
+  moveEnabled?: boolean;
   isRelationDisabled?: boolean;
   /**
    * Project or task
@@ -182,18 +186,23 @@ export interface Task {
   comparisonLevel?: number;
 }
 
-export interface EmptyTask {
+export interface EmptyTask<T = any> {
   id: string;
   type: "empty";
   name: string;
+  start?: Date;
+  end?: Date;
+  progress: number;
+  originalModel?: T
   parent?: string;
   comparisonLevel?: number;
   displayOrder?: number;
   isDisabled?: boolean;
+  hideChildren?: boolean;
   styles?: Partial<ColorStyles>;
 }
 
-export type TaskOrEmpty = Task | EmptyTask;
+export type TaskOrEmpty<T = any> = Task<T> | EmptyTask<T>;
 
 export type OnArrowDoubleClick = (
   taskFrom: Task,
@@ -229,7 +238,7 @@ export type OnDateChangeSuggestionType = [
   /**
    * Suggested task
    */
-  Task,
+  TaskOrEmpty,
   /**
    * Index in array of tasks
    */
@@ -240,7 +249,7 @@ export type OnDateChange = (
   task: TaskOrEmpty,
   dependentTasks: readonly Task[],
   index: number,
-  parents: readonly Task[],
+  parents: readonly TaskOrEmpty[],
   suggestions: readonly OnDateChangeSuggestionType[]
 ) => void;
 
@@ -262,7 +271,7 @@ export type OnMoveTaskBeforeAfter = (
   dependentTasks: readonly Task[],
   taskIndex: number,
   taskForMoveIndex: number,
-  parents: readonly Task[],
+  parents: TaskOrEmpty[],
   suggestions: readonly OnDateChangeSuggestionType[]
 ) => void;
 
@@ -272,7 +281,7 @@ export type OnMoveTaskInside = (
   dependentTasks: readonly Task[],
   parentIndex: number,
   childIndexes: readonly number[],
-  parents: readonly Task[],
+  parents: TaskOrEmpty[],
   suggestions: readonly OnDateChangeSuggestionType[]
 ) => void;
 
@@ -369,9 +378,13 @@ export interface EventOption {
    */
   onClick?: (task: TaskOrEmpty) => void;
   /**
-   * Recount descedents of a group task when moving
+   * Recount descendants of a group task when moving
    */
   isMoveChildsWithParent?: boolean;
+  /**
+   * Move related tasks
+   */
+  isMoveByRelations?: boolean;
   /**
    * Recount parents of tasks in callback `onChangeTasks`
    */
@@ -415,11 +428,8 @@ export interface EventOption {
   onDelete?: (
     tasks: readonly TaskOrEmpty[],
     dependentTasks: readonly Task[],
-    indexes: Array<{
-      task: TaskOrEmpty;
-      index: number;
-    }>,
-    parents: readonly Task[],
+    indexes: Array<{ task: TaskOrEmpty; index: number }>,
+    parents: TaskOrEmpty[],
     suggestions: readonly OnDateChangeSuggestionType[]
   ) => void;
   /**
@@ -898,7 +908,7 @@ export type ChangeMetadata = [
   /**
    * array of parents of the task
    */
-  Task[],
+  TaskOrEmpty[],
   /**
    * array of suggesgions for change parent
    */

@@ -22,7 +22,8 @@ export const DateStartColumn: React.FC<ColumnProps> = ({
     return (
       <div style={{
         "color": colors.barLabelColor
-      }}>
+      }}
+      >
         {format(task.start, dateFormats.dateColumnFormat, {
           locale: dateLocale,
         })}

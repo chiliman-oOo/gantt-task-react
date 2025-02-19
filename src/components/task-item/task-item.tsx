@@ -48,6 +48,7 @@ export type TaskItemProps = {
   taskHalfHeight: number;
   isProgressChangeable: boolean;
   isDateChangeable: boolean;
+  moveEnabled: boolean;
   authorizedRelations: RelationKind[];
   isRelationChangeable: boolean;
   ganttRelationEvent: GanttRelationEvent;
@@ -89,6 +90,7 @@ const TaskItemInner: React.FC<TaskItemProps> = props => {
     handleDeleteTasks,
     hasDependencyWarning,
     isDateChangeable,
+    moveEnabled,
     isDelete,
     isSelected,
     onClick = undefined,
@@ -191,7 +193,7 @@ const TaskItemInner: React.FC<TaskItemProps> = props => {
 
   const onTaskEventStart = useCallback(
     (action: BarMoveAction, clientX: number) => {
-      if (!isDateChangeable) {
+      if (!isDateChangeable && !moveEnabled) {
         return;
       }
 
@@ -201,7 +203,7 @@ const TaskItemInner: React.FC<TaskItemProps> = props => {
         onEventStart(action, task, clientX, barNode);
       }
     },
-    [isDateChangeable, onEventStart, task]
+    [isDateChangeable, onEventStart, task, moveEnabled]
   );
 
   const onLeftRelationTriggerMouseDown = useCallback(() => {

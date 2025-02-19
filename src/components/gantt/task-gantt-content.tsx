@@ -174,7 +174,7 @@ export const TaskGanttContent: React.FC<TaskGanttContentProps> = ({
         continue;
       }
 
-      if (task.type === "empty") {
+      if (task.type === "empty" || !task.start || !task.end) {
         continue;
       }
 
@@ -231,8 +231,9 @@ export const TaskGanttContent: React.FC<TaskGanttContentProps> = ({
             distances={distances}
             taskHeight={taskHeight}
             taskHalfHeight={taskHalfHeight}
-            isProgressChangeable={!task.isDisabled}
+            isProgressChangeable={!task.isDisabled && !task.disableProgressChange}
             isDateChangeable={!task.isDisabled}
+            moveEnabled={task.moveEnabled}
             isRelationChangeable={!task.isRelationDisabled}
             authorizedRelations={authorizedRelations}
             ganttRelationEvent={ganttRelationEvent}
@@ -399,6 +400,7 @@ export const TaskGanttContent: React.FC<TaskGanttContentProps> = ({
                   height={containerHeight}
                   key={`Arrow from ${taskId} to ${dependent.id} on ${comparisonLevel}`}
                 >
+
                   <Arrow
                     colorStyles={colorStyles}
                     distances={distances}

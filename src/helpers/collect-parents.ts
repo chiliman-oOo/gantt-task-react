@@ -1,15 +1,15 @@
-import { Task, TaskMapByLevel, TaskOrEmpty } from "../types/public-types";
+import { TaskMapByLevel, TaskOrEmpty } from "../types/public-types";
 
 export const collectParents = (
   task: TaskOrEmpty,
   tasksMap: TaskMapByLevel
-): Task[] => {
+): TaskOrEmpty[] => {
   /**
    * Avoid the circle of dependencies
    */
   const checkedTasks = new Set<string>();
 
-  const res: Task[] = [];
+  const res: TaskOrEmpty[] = [];
 
   let cur = task;
   while (true && task.parent != cur.id) {
@@ -34,7 +34,7 @@ export const collectParents = (
 
     const parentTask = tasksByLevel.get(parent);
 
-    if (!parentTask || parentTask.type === "empty" || !parentTask.isDisabled) {
+    if (!parentTask || !parentTask.isDisabled) {
       return res;
     }
 

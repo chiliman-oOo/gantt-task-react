@@ -26,7 +26,7 @@ export const getDependencyMapAndWarnings = (
   const isCollectMargins = isShowDependencyWarnings || isShowCriticalPath;
 
   tasks.forEach((task) => {
-    if (task.type === 'empty') {
+    if (task.type === 'empty' || !task.start || !task.end) {
       return;
     }
 
@@ -41,7 +41,7 @@ export const getDependencyMapAndWarnings = (
     }
 
     const tasksByLevel = tasksMap.get(comparisonLevel);
-    
+
     if (!dependencies || !tasksByLevel) {
       return;
     }
@@ -78,7 +78,7 @@ export const getDependencyMapAndWarnings = (
         return;
       }
 
-      if (source.type === 'empty') {
+      if (source.type === 'empty' || !source.start || !source.end) {
         return;
       }
 

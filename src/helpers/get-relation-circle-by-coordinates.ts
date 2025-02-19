@@ -20,7 +20,7 @@ export const getRelationCircleByCoordinates = (
   for (let i = 0, l = tasks.length; i < l; ++i) {
     const task = tasks[i];
 
-    if (task.type !== "empty") {
+    if (task.type !== "empty" && task.start && task.end) {
       const taskCoordinates = getCoordinatesOnLevel(
         task.id,
         mapTaskToCoordinatesOnLevel

@@ -14,7 +14,7 @@ export const getChildOutOfParentWarnings = (
   const res = new Map<number, Map<string, TaskOutOfParentWarnings>>();
 
   tasks.forEach((task) => {
-    if (task.type === 'empty') {
+    if (task.type === 'empty' || !task.start || !task.end) {
       return;
     }
 
@@ -37,7 +37,7 @@ export const getChildOutOfParentWarnings = (
       return;
     }
 
-    const notEmptyChilds = childs.filter(({ type }) => type !== "empty") as Task[];
+    const notEmptyChilds = childs.filter(({ type }) => type !== "empty" && task.start && task.end) as Task[];
 
     if (notEmptyChilds.length === 0) {
       return;

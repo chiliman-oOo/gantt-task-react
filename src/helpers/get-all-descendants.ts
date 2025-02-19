@@ -20,7 +20,7 @@ ResultItem extends Task | TaskOrEmpty = (IsCollectEmpty extends true ? TaskOrEmp
   }
 
   childs.forEach((child) => {
-    if (child.type === "empty") {
+    if (child.type === "empty" || !child.start || !child.end) {
       if (isCollectEmpty) {
         res.push(child as ResultItem);
       }
