@@ -81,7 +81,7 @@ const TaskGanttInner: React.FC<TaskGanttProps> = (props) => {
     ]
   );
 
-  const [arrowAnchorEl, setArrowAnchorEl] = React.useState<null | SVGElement>(
+  const [arrowAnchorEl, setArrowAnchorEl] = React.useState<null | any>(
     null
   );
   const [selectedDependency, setSelectedDependency] = React.useState<{
@@ -90,7 +90,7 @@ const TaskGanttInner: React.FC<TaskGanttProps> = (props) => {
     taskTo: Task;
     extremityTo: DateExtremity;
   }>(null);
-  const isArrowContextualPaletteOpened = Boolean(arrowAnchorEl);
+
   const onClickArrow: (
     taskFrom: Task,
     extremityFrom: DateExtremity,
@@ -98,7 +98,20 @@ const TaskGanttInner: React.FC<TaskGanttProps> = (props) => {
     extremityTo: DateExtremity,
     event: React.MouseEvent<SVGElement>
   ) => void = (taskFrom, extremityFrom, taskTo, extremityTo, event) => {
-    setArrowAnchorEl(event.currentTarget);
+    setArrowAnchorEl({
+      getBoundingClientRect() {
+        return {
+          width: 5,
+          height: 5,
+          x: event.clientX,
+          y: event.clientY,
+          top: event.clientY,
+          left: event.clientX,
+          right: event.clientX,
+          bottom: event.clientY,
+        };
+      },
+    });
     setSelectedDependency({ taskFrom, extremityFrom, taskTo, extremityTo });
   };
 
@@ -124,18 +137,9 @@ const TaskGanttInner: React.FC<TaskGanttProps> = (props) => {
     arrowContextualPalette = <div></div>;
   }
 
-  const onArrowClickAway = (e: MouseEvent | TouchEvent) => {
-    const svgElement = e.target as SVGElement;
-    if (svgElement) {
-      const keepPalette =
-        svgElement.ownerSVGElement?.classList.contains("ArrowClassName");
-      // In a better world the contextual palette should be defined in TaskItem component but ClickAwayListener and Popper uses div that are not displayed in svg
-      // So in order to let the palette open when clicking on another task, this checks if the user clicked on another task
-      if (!keepPalette) {
+  const onArrowClickAway = () => {
         setArrowAnchorEl(null);
         setSelectedDependency(null);
-      }
-    }
   };
 
   // Manage the contextual palette
@@ -228,11 +232,11 @@ const TaskGanttInner: React.FC<TaskGanttProps> = (props) => {
           </ClickAwayListener>
         )}
         {barProps.TaskDependencyContextualPalette &&
-          isArrowContextualPaletteOpened && (
+          arrowAnchorEl !== null && (
             <ClickAwayListener onClickAway={onArrowClickAway}>
               <Popper
                 key={`dependency-contextual-palette`}
-                open={isArrowContextualPaletteOpened}
+                open={arrowAnchorEl !== null}
                 anchorEl={arrowAnchorEl}
                 disablePortal
                 placement="top"
